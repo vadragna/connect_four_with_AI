@@ -23,8 +23,88 @@
     box.css("visibility", "hidden");
   });
 
+  function checkForDiagVictory() {
+    var diagonal = [];
+    var diagonal2 = [];
+    var diagonal3 = [];
+    var diagonal4 = [];
+    var diagonal5 = [];
+    var diagonal6 = [];
+    var diagonal7 = [];
+    var diagonal8 = [];
+    var diagonal9 = [];
+    var diagonal10 = [];
+    var diagonal11 = [];
+    var diagonal12 = [];
+
+    for (var x = 0; x < 7; x++) {
+      for (var y = 0; y < 6; y++) {
+        if (x + y == 5) {
+          diagonal.push(getSlotByCoord(x, y));
+        } else if (x + y == 6) {
+          diagonal2.push(getSlotByCoord(x, y));
+        } else if (x + y == 7) {
+          diagonal3.push(getSlotByCoord(x, y));
+        } else if (x + y == 8) {
+          diagonal4.push(getSlotByCoord(x, y));
+        } else if (x + y == 4) {
+          diagonal5.push(getSlotByCoord(x, y));
+        } else if (x + y == 3) {
+          diagonal6.push(getSlotByCoord(x, y));
+        }
+        if (x - y == 3) {
+          diagonal7.push(getSlotByCoord(x, y));
+        } else if (x - y == 2) {
+          diagonal8.push(getSlotByCoord(x, y));
+        } else if (x - y == 1) {
+          diagonal9.push(getSlotByCoord(x, y));
+        } else if (x - y == 0) {
+          diagonal10.push(getSlotByCoord(x, y));
+        } else if (x - y == -1) {
+          diagonal11.push(getSlotByCoord(x, y));
+        } else if (x - y == -2) {
+          diagonal12.push(getSlotByCoord(x, y));
+        }
+      }
+    }
+    var bigArray = [
+      diagonal,
+      diagonal2,
+      diagonal3,
+      diagonal4,
+      diagonal5,
+      diagonal6,
+      diagonal7,
+      diagonal8,
+      diagonal9,
+      diagonal10,
+      diagonal11,
+      diagonal12,
+    ];
+    for (var z = 0; z < bigArray.length; z++) {
+      var counter = 0;
+      for (var q = 0; q < bigArray[z].length; q++) {
+        if (bigArray[z][q].hasClass(currentPlayer)) {
+          counter++;
+        } else {
+          counter = 0;
+        }
+        if (counter == 4) {
+          alert.html("the winner player is: " + currentPlayer);
+          bigArray[z][q].addClass("big");
+          bigArray[z][q - 1].addClass("big");
+          bigArray[z][q - 2].addClass("big");
+          bigArray[z][q - 3].addClass("big");
+          alert.show();
+          alert.addClass("victory");
+          background.css("visibility", "visible");
+        }
+      }
+    }
+  }
+
   $(".column").on("click", function (e) {
-    if (e.target === background) {
+    if (e.target === background || e.target === alert) {
       return;
     } else {
       if (mode === "friend" || currentPlayer === "player1") {
@@ -48,88 +128,8 @@
       var slotsInRow = $(".row" + i);
       checkForVictory(slotsInRow);
 
-      var diagonal = [];
-      var diagonal2 = [];
-      var diagonal3 = [];
-      var diagonal4 = [];
-      var diagonal5 = [];
-      var diagonal6 = [];
-      var diagonal7 = [];
-      var diagonal8 = [];
-      var diagonal9 = [];
-      var diagonal10 = [];
-      var diagonal11 = [];
-      var diagonal12 = [];
-
-      for (var x = 0; x < slotsInRow.length; x++) {
-        for (var y = 0; y < slotsInCol.length; y++) {
-          if (x + y == 5) {
-            diagonal.push(getSlotByCoord(x, y));
-          } else if (x + y == 6) {
-            diagonal2.push(getSlotByCoord(x, y));
-          } else if (x + y == 7) {
-            diagonal3.push(getSlotByCoord(x, y));
-          } else if (x + y == 8) {
-            diagonal4.push(getSlotByCoord(x, y));
-          } else if (x + y == 4) {
-            diagonal5.push(getSlotByCoord(x, y));
-          } else if (x + y == 3) {
-            diagonal6.push(getSlotByCoord(x, y));
-          }
-          if (x - y == 3) {
-            diagonal7.push(getSlotByCoord(x, y));
-          } else if (x - y == 2) {
-            diagonal8.push(getSlotByCoord(x, y));
-          } else if (x - y == 1) {
-            diagonal9.push(getSlotByCoord(x, y));
-          } else if (x - y == 0) {
-            diagonal10.push(getSlotByCoord(x, y));
-          } else if (x - y == -1) {
-            diagonal11.push(getSlotByCoord(x, y));
-          } else if (x - y == -2) {
-            diagonal12.push(getSlotByCoord(x, y));
-          }
-        }
-      }
-      var bigArray = [
-        diagonal,
-        diagonal2,
-        diagonal3,
-        diagonal4,
-        diagonal5,
-        diagonal6,
-        diagonal7,
-        diagonal8,
-        diagonal9,
-        diagonal10,
-        diagonal11,
-        diagonal12,
-      ];
-
-      function checkForDiagVictory() {
-        for (var z = 0; z < bigArray.length; z++) {
-          var counter = 0;
-          for (var q = 0; q < bigArray[z].length; q++) {
-            if (bigArray[z][q].hasClass(currentPlayer)) {
-              counter++;
-            } else {
-              counter = 0;
-            }
-            if (counter == 4) {
-              alert.html("the winner player is: " + currentPlayer);
-              bigArray[z][q].addClass("big");
-              bigArray[z][q - 1].addClass("big");
-              bigArray[z][q - 2].addClass("big");
-              bigArray[z][q - 3].addClass("big");
-              alert.show();
-              alert.addClass("victory");
-              background.css("visibility", "visible");
-            }
-          }
-        }
-      }
       checkForDiagVictory();
-      switchPlayer();
+      setTimeout(switchPlayer(), 1500);
     }
   });
 
@@ -183,6 +183,15 @@
             if (moveScore > bestMoveSoFar) {
               bestMoveSoFar = moveScore;
               nextMove = x;
+              console.log(
+                "move for columns",
+                "nextMove",
+                nextMove,
+                "y",
+                y,
+                "x",
+                x
+              );
             }
           }
         }
@@ -199,7 +208,8 @@
         var column;
         var nextMove;
         var highestCount = 0;
-        //locic for moves in columns
+
+        //logic for moves in columns
         var randomSide = Math.floor(Math.random() * 2);
         if (randomSide === 0) {
           for (var x = 0; x < numbers.length; x++) {
@@ -228,15 +238,17 @@
               count = 0;
             }
             if (count === 2) {
-              moveScore = 2;
-              if (moveScore > bestMoveSoFar) {
+              if (moveScore > bestMoveSoFar && y > 0) {
+                moveScore = 2;
                 nextMove = x;
+                console.log("nextMove in columns 2 pieces", nextMove);
               }
             }
             if (count === 3) {
-              moveScore = 10;
-              if (moveScore > bestMoveSoFar) {
+              if (moveScore > bestMoveSoFar && y > 0) {
+                moveScore = 10;
                 nextMove = x;
+                console.log("nextMove in columns 3 pieces", nextMove);
               }
             }
           }
@@ -244,8 +256,18 @@
         // logic for moves in rows
         for (let y = 0; y < 6; y++) {
           let counter = 0;
+          var count = 0;
           var rows = $(".row" + y);
+          console.log("y", y);
           for (var x = 0; x < 7; x++) {
+            if (rows.eq(x).hasClass("player2")) {
+              count++;
+            } else {
+              count = 0;
+            }
+            if (count == 2) {
+              console.log("pc can win");
+            }
             if (rows.eq(x).hasClass("player1")) {
               if (x <= 3) {
                 counter++;
@@ -257,55 +279,106 @@
               }
               console.log("counter outside else", counter);
               if (counter === 3) {
-                let rowUnder = $(`.row${y + 1}`);
-                console.log("rowUnder", rowUnder);
-                console.log("counter 3", x);
-                if (
-                  !rows.eq(x + 1).hasClass("player1") &&
-                  !rows.eq(x + 1).hasClass("player2") &&
-                  !rowUnder.eq(x + 1).hasClass("player1") &&
-                  !rowUnder.eq(x + 1).hasClass("player1")
-                ) {
-                  console.log("in x + 1", moveScore, x, y);
-                  moveScore = 9;
-                  if (moveScore > bestMoveSoFar) {
-                    nextMove = x + 1;
+                if (y < 5) {
+                  let under = y + 1;
+                  let rowUnder = $(`.row${under}`);
+                  if (
+                    !rows.eq(x + 1).hasClass("player1") &&
+                    !rows.eq(x + 1).hasClass("player2") &&
+                    rowUnder.eq(x + 1).hasClass("player1" || "player2")
+                  ) {
+                    console.log("in x + 1", moveScore, x, y);
+                    moveScore = 9;
+                    if (moveScore > bestMoveSoFar) {
+                      if (x < 6) {
+                        nextMove = x + 1;
+                        console.log("next move defence rows +1", nextMove);
+                      }
+                    }
+                  }
+                  if (
+                    !rows.eq(x - 1).hasClass("player1") &&
+                    !rows.eq(x - 1).hasClass("player2") &&
+                    rowUnder.eq(x - 1).hasClass("player1" || "player2")
+                  ) {
+                    console.log("in x - 1", moveScore, x, y);
+                    moveScore = 9;
+                    if (moveScore > bestMoveSoFar) {
+                      nextMove = x - 1;
+                      console.log("next move defence rows -1", nextMove);
+                    }
+                  }
+                  if (
+                    !rows.eq(x - 2).hasClass("player1") &&
+                    !rows.eq(x - 2).hasClass("player2") &&
+                    rowUnder.eq(x - 2).hasClass("player1" || "player2")
+                  ) {
+                    console.log("in x - 2", moveScore, x, y);
+                    moveScore = 9;
+                    if (moveScore > bestMoveSoFar) {
+                      nextMove = x - 2;
+                      console.log("next move defence rows -2", nextMove);
+                    }
+                  }
+                  if (
+                    !rows.eq(x - 3).hasClass("player1") &&
+                    !rows.eq(x - 3).hasClass("player2") &&
+                    rowUnder.eq(x - 3).hasClass("player1" || "player2")
+                  ) {
+                    moveScore = 9;
+                    console.log("in x - 3", moveScore, x, y);
+                    if (moveScore > bestMoveSoFar && x >= 3) {
+                      nextMove = x - 3;
+                      console.log("next move defence rows -3", nextMove);
+                    }
                   }
                 }
-                if (
-                  !rows.eq(x - 1).hasClass("player1") &&
-                  !rows.eq(x - 1).hasClass("player2") &&
-                  !rowUnder.eq(x - 1).hasClass("player1") &&
-                  !rowUnder.eq(x - 1).hasClass("player1")
-                ) {
-                  console.log("in x - 1", moveScore, x, y);
-                  moveScore = 9;
-                  if (moveScore > bestMoveSoFar) {
-                    nextMove = x - 1;
+                if (y === 5) {
+                  if (
+                    !rows.eq(x + 1).hasClass("player1") &&
+                    !rows.eq(x + 1).hasClass("player2")
+                  ) {
+                    console.log("in x + 1", moveScore, x, y);
+                    moveScore = 9;
+                    if (moveScore > bestMoveSoFar) {
+                      if (x < 6) {
+                        nextMove = x + 1;
+                        console.log("next move defence rows +1", nextMove);
+                      }
+                    }
                   }
-                }
-                if (
-                  !rows.eq(x - 2).hasClass("player1") &&
-                  !rows.eq(x - 2).hasClass("player2") &&
-                  !rowUnder.eq(x - 2).hasClass("player1") &&
-                  !rowUnder.eq(x - 2).hasClass("player1")
-                ) {
-                  console.log("in x - 2", moveScore, x, y);
-                  moveScore = 9;
-                  if (moveScore > bestMoveSoFar) {
-                    nextMove = x - 2;
+                  if (
+                    !rows.eq(x - 1).hasClass("player1") &&
+                    !rows.eq(x - 1).hasClass("player2")
+                  ) {
+                    console.log("in x - 1", moveScore, x, y);
+                    moveScore = 9;
+                    if (moveScore > bestMoveSoFar) {
+                      nextMove = x - 1;
+                      console.log("next move defence rows -1", nextMove);
+                    }
                   }
-                }
-                if (
-                  !rows.eq(x - 3).hasClass("player1") &&
-                  !rows.eq(x - 3).hasClass("player2") &&
-                  !rowUnder.eq(x - 3).hasClass("player1") &&
-                  !rowUnder.eq(x - 3).hasClass("player1")
-                ) {
-                  console.log("in x - 3", moveScore, x, y);
-                  moveScore = 9;
-                  if (moveScore > bestMoveSoFar && x >= 3) {
-                    nextMove = x - 3;
+                  if (
+                    !rows.eq(x - 2).hasClass("player1") &&
+                    !rows.eq(x - 2).hasClass("player2")
+                  ) {
+                    console.log("in x - 2", moveScore, x, y);
+                    moveScore = 9;
+                    if (moveScore > bestMoveSoFar) {
+                      nextMove = x - 2;
+                      console.log("next move defence rows -2", nextMove);
+                    }
+                  }
+                  if (
+                    !rows.eq(x - 3).hasClass("player1") &&
+                    !rows.eq(x - 3).hasClass("player2")
+                  ) {
+                    moveScore = 9;
+                    console.log("in x - 3", moveScore, x, y);
+                    if (moveScore > bestMoveSoFar && x >= 3) {
+                      nextMove = x - 3;
+                      console.log("next move defence rows -3", nextMove);
+                    }
                   }
                 }
               }
@@ -313,7 +386,7 @@
           }
         }
 
-        console.log("nextMove", nextMove);
+        console.log("nextMove definitive", nextMove, "column", column);
         if (!nextMove && nextMove != 0) {
           var random = Math.floor(Math.random() * 7);
           column = numbers[random];
@@ -321,15 +394,9 @@
           column = numbers[nextMove];
           console.log("column", column);
         }
-        var col = $(`.${column}`);
 
+        var col = $(`.column.${column}`);
         var slotsInCol = col.children();
-        if (slotsInCol.eq(0).hasClass("player1" || "player2")) {
-          console.log("slotsInCol.eq(0)", slotsInCol.eq(0));
-          currentPlayer = "player1";
-          switchPlayer();
-          return;
-        }
         for (var i = slotsInCol.length - 1; i >= 0; i--) {
           if (
             !slotsInCol.eq(i).hasClass("player1") &&
@@ -342,7 +409,7 @@
         checkForVictory(slotsInCol);
         var slotsInRow = $(".row" + i);
         checkForVictory(slotsInRow);
-
+        checkForDiagVictory();
         playingCoin.css("background-color", "red");
         currentPlayer = "player1";
       }
