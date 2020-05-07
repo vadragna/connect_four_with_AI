@@ -112,7 +112,7 @@
         if (i != 0 || column.eq(0).not("player1" || "player2")) {
           return i;
         } else {
-          return "full";
+          return;
         }
       }
     }
@@ -126,9 +126,7 @@
         var col = $(e.currentTarget);
         var slotsInCol = col.children();
         var i = addCoin(slotsInCol);
-        console.log("i", i);
         if (!i) {
-          console.log("return", i);
           return;
         }
       }
@@ -138,9 +136,8 @@
       checkForVictory(slotsInRow);
 
       checkForDiagVictory();
-      if (i != "full") {
-        switchPlayer();
-      }
+
+      switchPlayer();
     }
   });
 
@@ -247,7 +244,9 @@
             if (count === 2) {
               if (moveScore > bestMoveSoFar && y > 0) {
                 moveScore = 2;
-                nextMove = x;
+                if (moveScore > bestMoveSoFar) {
+                  nextMove = x;
+                }
                 console.log("nextMove in columns 2 pieces", nextMove);
               } else {
                 moveScore = 0;
@@ -256,7 +255,9 @@
             if (count === 3) {
               if (moveScore > bestMoveSoFar && y > 0) {
                 moveScore = 10;
-                nextMove = x;
+                if (moveScore > bestMoveSoFar) {
+                  nextMove = x;
+                }
                 console.log("nextMove in columns 3 pieces", nextMove);
               } else {
                 moveScore = 0;
@@ -287,17 +288,26 @@
                   counter++;
                 }
               }
-              // console.log("counter outside else", counter);
               if (counter === 3) {
                 if (y < 5) {
                   let under = y + 1;
-                  let rowUnder = $(`.row${under}`);
+                  let rowUnder = $(".row" + under);
+                  console.log(
+                    "rowUnder",
+                    rowUnder,
+                    "x",
+                    x,
+                    "y",
+                    y,
+                    "rows",
+                    rows
+                  );
                   if (
                     !rows.eq(x + 1).hasClass("player1") &&
                     !rows.eq(x + 1).hasClass("player2") &&
                     rowUnder.eq(x + 1).hasClass("player1" || "player2")
                   ) {
-                    console.log("in x + 1", moveScore, x, y);
+                    console.log("in x + 1", moveScore, "x", x, "y", y);
                     moveScore = 9;
                     if (moveScore > bestMoveSoFar) {
                       if (x < 6) {
@@ -306,6 +316,8 @@
                       } else {
                         moveScore = 0;
                       }
+                    } else {
+                      moveScore = 0;
                     }
                   }
                   if (
@@ -398,8 +410,7 @@
                     !rows.eq(x - 3).hasClass("player2")
                   ) {
                     moveScore = 9;
-                    console.log("in x - 3", moveScore, x, y);
-                    if (moveScore > bestMoveSoFar && x >= 3) {
+                    if (moveScore > bestMoveSoFar) {
                       nextMove = x - 3;
                       console.log("next move defence rows -3", nextMove);
                     }
@@ -412,7 +423,7 @@
           }
         }
 
-        console.log("nextMove definitive", nextMove, "column", column);
+        console.log("nextMove definitive", nextMove);
         if (!nextMove) {
           var random = Math.floor(Math.random() * 7);
           column = numbers[random];
@@ -422,15 +433,17 @@
         }
         var col = $(`.column.${column}`);
         var slotsInCol = col.children();
-        for (var i = slotsInCol.length - 1; i >= 0; i--) {
-          if (
-            !slotsInCol.eq(i).hasClass("player1") &&
-            !slotsInCol.eq(i).hasClass("player2")
-          ) {
-            slotsInCol.eq(i).addClass(currentPlayer);
-            break;
-          }
+        console.log("col", col);
+        var i = addCoin(slotsInCol);
+        if (!i) {
+          random = Math.floor(Math.random() * 7);
+          column = numbers[random];
+          col = $(`.column.${column}`);
+          slotsInCol = col.children();
+          addCoin(slotsInCol);
         }
+        console.log("i", i);
+
         checkForVictory(slotsInCol);
         var slotsInRow = $(".row" + i);
         checkForVictory(slotsInRow);
