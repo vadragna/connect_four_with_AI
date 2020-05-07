@@ -102,6 +102,21 @@
       }
     }
   }
+  function addCoin(column) {
+    for (var i = column.length - 1; i >= 0; i--) {
+      if (
+        !column.eq(i).hasClass("player1") &&
+        !column.eq(i).hasClass("player2")
+      ) {
+        column.eq(i).addClass(currentPlayer);
+        if (i != 0 || column.eq(0).not("player1" || "player2")) {
+          return i;
+        } else {
+          return "full";
+        }
+      }
+    }
+  }
 
   $(".column").on("click", function (e) {
     if (e.target === background || e.target === alert) {
@@ -110,26 +125,22 @@
       if (mode === "friend" || currentPlayer === "player1") {
         var col = $(e.currentTarget);
         var slotsInCol = col.children();
-      }
-      for (var i = slotsInCol.length - 1; i >= 0; i--) {
-        if (
-          !slotsInCol.eq(i).hasClass("player1") &&
-          !slotsInCol.eq(i).hasClass("player2")
-        ) {
-          slotsInCol.eq(i).addClass(currentPlayer);
-          break;
+        var i = addCoin(slotsInCol);
+        console.log("i", i);
+        if (!i) {
+          console.log("return", i);
+          return;
         }
       }
-      if (i === -1) {
-        console.log("i", i);
-        return;
-      }
+
       checkForVictory(slotsInCol);
       var slotsInRow = $(".row" + i);
       checkForVictory(slotsInRow);
 
       checkForDiagVictory();
-      setTimeout(switchPlayer(), 1500);
+      if (i != "full") {
+        switchPlayer();
+      }
     }
   });
 
@@ -179,20 +190,16 @@
           if (highestCount == 3) {
             moveScore = 8;
           }
-          if (!slots.eq(y).hasClass("player2")) {
+          if (
+            !slots.eq(y).hasClass("player2") &&
+            !slots.eq(y).hasClass("player1")
+          ) {
             if (moveScore > bestMoveSoFar) {
               bestMoveSoFar = moveScore;
               nextMove = x;
-              console.log(
-                "move for columns",
-                "nextMove",
-                nextMove,
-                "y",
-                y,
-                "x",
-                x
-              );
             }
+          } else {
+            moveScore = 0;
           }
         }
         count = 0;
@@ -242,6 +249,8 @@
                 moveScore = 2;
                 nextMove = x;
                 console.log("nextMove in columns 2 pieces", nextMove);
+              } else {
+                moveScore = 0;
               }
             }
             if (count === 3) {
@@ -249,6 +258,8 @@
                 moveScore = 10;
                 nextMove = x;
                 console.log("nextMove in columns 3 pieces", nextMove);
+              } else {
+                moveScore = 0;
               }
             }
           }
@@ -258,7 +269,6 @@
           let counter = 0;
           var count = 0;
           var rows = $(".row" + y);
-          console.log("y", y);
           for (var x = 0; x < 7; x++) {
             if (rows.eq(x).hasClass("player2")) {
               count++;
@@ -271,13 +281,13 @@
             if (rows.eq(x).hasClass("player1")) {
               if (x <= 3) {
                 counter++;
-                console.log("counter", counter);
+                // console.log("counter", counter);
               } else {
                 if (!rows.eq(x - 4).hasClass("player1")) {
                   counter++;
                 }
               }
-              console.log("counter outside else", counter);
+              // console.log("counter outside else", counter);
               if (counter === 3) {
                 if (y < 5) {
                   let under = y + 1;
@@ -293,6 +303,8 @@
                       if (x < 6) {
                         nextMove = x + 1;
                         console.log("next move defence rows +1", nextMove);
+                      } else {
+                        moveScore = 0;
                       }
                     }
                   }
@@ -306,6 +318,8 @@
                     if (moveScore > bestMoveSoFar) {
                       nextMove = x - 1;
                       console.log("next move defence rows -1", nextMove);
+                    } else {
+                      moveScore = 0;
                     }
                   }
                   if (
@@ -319,6 +333,8 @@
                       nextMove = x - 2;
                       console.log("next move defence rows -2", nextMove);
                     }
+                  } else {
+                    moveScore = 0;
                   }
                   if (
                     !rows.eq(x - 3).hasClass("player1") &&
@@ -331,6 +347,8 @@
                       nextMove = x - 3;
                       console.log("next move defence rows -3", nextMove);
                     }
+                  } else {
+                    moveScore = 0;
                   }
                 }
                 if (y === 5) {
@@ -346,6 +364,8 @@
                         console.log("next move defence rows +1", nextMove);
                       }
                     }
+                  } else {
+                    moveScore = 0;
                   }
                   if (
                     !rows.eq(x - 1).hasClass("player1") &&
@@ -357,6 +377,8 @@
                       nextMove = x - 1;
                       console.log("next move defence rows -1", nextMove);
                     }
+                  } else {
+                    moveScore = 0;
                   }
                   if (
                     !rows.eq(x - 2).hasClass("player1") &&
@@ -368,6 +390,8 @@
                       nextMove = x - 2;
                       console.log("next move defence rows -2", nextMove);
                     }
+                  } else {
+                    moveScore = 0;
                   }
                   if (
                     !rows.eq(x - 3).hasClass("player1") &&
@@ -379,6 +403,8 @@
                       nextMove = x - 3;
                       console.log("next move defence rows -3", nextMove);
                     }
+                  } else {
+                    moveScore = 0;
                   }
                 }
               }
@@ -387,14 +413,13 @@
         }
 
         console.log("nextMove definitive", nextMove, "column", column);
-        if (!nextMove && nextMove != 0) {
+        if (!nextMove) {
           var random = Math.floor(Math.random() * 7);
           column = numbers[random];
         } else {
           column = numbers[nextMove];
           console.log("column", column);
         }
-
         var col = $(`.column.${column}`);
         var slotsInCol = col.children();
         for (var i = slotsInCol.length - 1; i >= 0; i--) {
