@@ -8,6 +8,7 @@
   var friend = $("#friend");
   var AI = $("#AI");
   let fullColumns = [];
+  var bestMoveSoFar = 0;
   var mode;
 
   var box = $("#askForPlayers");
@@ -179,7 +180,7 @@
       if (slots.eq(y).hasClass("player1")) {
         count++;
       } else {
-        if (count > highestCount && count > 1) {
+        if (count >= highestCount && count > 1) {
           highestCount = count;
           if (highestCount == 2) {
             moveScore = 4;
@@ -215,23 +216,25 @@
 
         //logic for moves in columns
         var randomSide = Math.floor(Math.random() * 2);
-        if (randomSide === 0) {
-          for (var x = 0; x < numbers.length; x++) {
-            column = $(".column." + numbers[x]);
-            slots = column.children();
-            for (var y = slots.length - 1; y >= 0; y--) {
-              moveForColumns(slots);
-            }
-          }
-        } else {
-          for (var x = numbers.length - 1; x >= 0; x--) {
-            column = $(".column." + numbers[x]);
-            slots = column.children();
-            for (var y = slots.length - 1; y >= 0; y--) {
-              moveForColumns(slots);
-            }
+        // if (randomSide === 0) {
+        for (var x = 0; x < numbers.length; x++) {
+          column = $(".column." + numbers[x]);
+          slots = column.children();
+          for (var y = slots.length - 1; y >= 0; y--) {
+            moveForColumns(slots);
           }
         }
+        // }
+        //  else {
+        //   for (var x = numbers.length - 1; x >= 0; x--) {
+        //     column = $(".column." + numbers[x]);
+        //     slots = column.children();
+        //     for (var y = slots.length - 1; y >= 0; y--) {
+        //       moveForColumns(slots);
+        //     }
+        //   }
+        // }
+        //logic for next move columns attack
         for (var x = 0; x < numbers.length; x++) {
           column = $(".column." + numbers[x]);
           slots = column.children();
@@ -243,9 +246,11 @@
             }
             if (count === 2) {
               if (moveScore > bestMoveSoFar && y > 0) {
+                bestMoveSoFar = moveScore;
                 moveScore = 2;
                 if (moveScore > bestMoveSoFar) {
                   nextMove = x;
+                  bestMoveSoFar = moveScore;
                 }
                 console.log("nextMove in columns 2 pieces", nextMove);
               } else {
@@ -256,9 +261,10 @@
               if (moveScore > bestMoveSoFar && y > 0) {
                 moveScore = 10;
                 if (moveScore > bestMoveSoFar) {
+                  bestMoveSoFar = moveScore;
                   nextMove = x;
+                  console.log("nextMove in columns 3 pieces", nextMove);
                 }
-                console.log("nextMove in columns 3 pieces", nextMove);
               } else {
                 moveScore = 0;
               }
@@ -282,7 +288,6 @@
             if (rows.eq(x).hasClass("player1")) {
               if (x <= 3) {
                 counter++;
-                // console.log("counter", counter);
               } else {
                 if (!rows.eq(x - 4).hasClass("player1")) {
                   counter++;
@@ -292,16 +297,6 @@
                 if (y < 5) {
                   let under = y + 1;
                   let rowUnder = $(".row" + under);
-                  console.log(
-                    "rowUnder",
-                    rowUnder,
-                    "x",
-                    x,
-                    "y",
-                    y,
-                    "rows",
-                    rows
-                  );
                   if (
                     !rows.eq(x + 1).hasClass("player1") &&
                     !rows.eq(x + 1).hasClass("player2") &&
@@ -311,6 +306,7 @@
                     moveScore = 9;
                     if (moveScore > bestMoveSoFar) {
                       if (x < 6) {
+                        bestMoveSoFar = moveScore;
                         nextMove = x + 1;
                         console.log("next move defence rows +1", nextMove);
                       } else {
@@ -328,6 +324,7 @@
                     console.log("in x - 1", moveScore, x, y);
                     moveScore = 9;
                     if (moveScore > bestMoveSoFar) {
+                      bestMoveSoFar = moveScore;
                       nextMove = x - 1;
                       console.log("next move defence rows -1", nextMove);
                     } else {
@@ -342,6 +339,7 @@
                     console.log("in x - 2", moveScore, x, y);
                     moveScore = 9;
                     if (moveScore > bestMoveSoFar) {
+                      bestMoveSoFar = moveScore;
                       nextMove = x - 2;
                       console.log("next move defence rows -2", nextMove);
                     }
@@ -356,6 +354,7 @@
                     moveScore = 9;
                     console.log("in x - 3", moveScore, x, y);
                     if (moveScore > bestMoveSoFar && x >= 3) {
+                      bestMoveSoFar = moveScore;
                       nextMove = x - 3;
                       console.log("next move defence rows -3", nextMove);
                     }
@@ -372,6 +371,7 @@
                     moveScore = 9;
                     if (moveScore > bestMoveSoFar) {
                       if (x < 6) {
+                        bestMoveSoFar = moveScore;
                         nextMove = x + 1;
                         console.log("next move defence rows +1", nextMove);
                       }
@@ -386,6 +386,7 @@
                     console.log("in x - 1", moveScore, x, y);
                     moveScore = 9;
                     if (moveScore > bestMoveSoFar) {
+                      bestMoveSoFar = moveScore;
                       nextMove = x - 1;
                       console.log("next move defence rows -1", nextMove);
                     }
@@ -399,6 +400,7 @@
                     console.log("in x - 2", moveScore, x, y);
                     moveScore = 9;
                     if (moveScore > bestMoveSoFar) {
+                      bestMoveSoFar = moveScore;
                       nextMove = x - 2;
                       console.log("next move defence rows -2", nextMove);
                     }
@@ -411,6 +413,7 @@
                   ) {
                     moveScore = 9;
                     if (moveScore > bestMoveSoFar) {
+                      bestMoveSoFar = moveScore;
                       nextMove = x - 3;
                       console.log("next move defence rows -3", nextMove);
                     }
@@ -423,7 +426,14 @@
           }
         }
 
-        console.log("nextMove definitive", nextMove);
+        console.log(
+          "nextMove definitive",
+          nextMove,
+          "bestMoveSoFar",
+          bestMoveSoFar,
+          "moveScore",
+          moveScore
+        );
         if (!nextMove) {
           var random = Math.floor(Math.random() * 7);
           column = numbers[random];
@@ -434,6 +444,7 @@
         var col = $(`.column.${column}`);
         var slotsInCol = col.children();
         console.log("col", col);
+
         var i = addCoin(slotsInCol);
         if (!i) {
           random = Math.floor(Math.random() * 7);
