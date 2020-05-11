@@ -272,7 +272,8 @@
         // logic for moves in rows
         for (let y = 5; y >= 0; y--) {
           let counter = 0;
-          var count = 0;
+          let count = 0;
+          let counting = 0;
           var rows = $(".row" + y);
           for (var x = 0; x < 7; x++) {
             if (rows.eq(x).hasClass("player2")) {
@@ -359,18 +360,18 @@
                 console.log("next move defence rows -3", nextMove);
               }
             }
-            function rowLogic() {
+            function rowLogic(human, ai) {
               if (y < 5) {
                 let under = y + 1;
                 let rowUnder = $(".row" + under);
                 console.log("else if (y < 5)");
                 if (
-                  !rows.eq(x + 1).hasClass("player1") &&
-                  !rows.eq(x + 1).hasClass("player2") &&
+                  !rows.eq(x + 1).hasClass(human) &&
+                  !rows.eq(x + 1).hasClass(ai) &&
                   x < 6 &&
                   bestMoveSoFar <= 8 &&
-                  (rowUnder.eq(x + 1).hasClass("player1") ||
-                    rowUnder.eq(x + 1).hasClass("player2"))
+                  (rowUnder.eq(x + 1).hasClass(human) ||
+                    rowUnder.eq(x + 1).hasClass(ai))
                 ) {
                   console.log("in x + 1", moveScore, "x", x, "y", y);
                   moveScore = 8;
@@ -381,12 +382,12 @@
                   }
                 }
                 if (
-                  !rows.eq(x - 3).hasClass("player1") &&
-                  !rows.eq(x - 3).hasClass("player2") &&
+                  !rows.eq(x - 3).hasClass(human) &&
+                  !rows.eq(x - 3).hasClass(ai) &&
                   x >= 3 &&
                   bestMoveSoFar <= 8 &&
-                  (rowUnder.eq(x - 3).hasClass("player1") ||
-                    rowUnder.eq(x - 3).hasClass("player2"))
+                  (rowUnder.eq(x - 3).hasClass(human) ||
+                    rowUnder.eq(x - 3).hasClass(ai))
                 ) {
                   moveScore = 8;
                   console.log("in x - 3", moveScore, x, y);
@@ -395,12 +396,12 @@
                   console.log("next move defence rows -3", nextMove);
                 }
                 if (
-                  !rows.eq(x - 2).hasClass("player1") &&
-                  !rows.eq(x - 2).hasClass("player2") &&
+                  !rows.eq(x - 2).hasClass(human) &&
+                  !rows.eq(x - 2).hasClass(ai) &&
                   x >= 2 &&
                   bestMoveSoFar <= 8 &&
-                  (rowUnder.eq(x - 2).hasClass("player1") ||
-                    rowUnder.eq(x - 2).hasClass("player2"))
+                  (rowUnder.eq(x - 2).hasClass(human) ||
+                    rowUnder.eq(x - 2).hasClass(ai))
                 ) {
                   moveScore = 9;
                   console.log("in x - 2", moveScore, x, y);
@@ -409,12 +410,12 @@
                   console.log("next move defence rows -2", nextMove);
                 }
                 if (
-                  !rows.eq(x - 1).hasClass("player1") &&
-                  !rows.eq(x - 1).hasClass("player2") &&
+                  !rows.eq(x - 1).hasClass(human) &&
+                  !rows.eq(x - 1).hasClass(ai) &&
                   x >= 1 &&
                   bestMoveSoFar <= 8 &&
-                  (rowUnder.eq(x - 1).hasClass("player1") ||
-                    rowUnder.eq(x - 1).hasClass("player2"))
+                  (rowUnder.eq(x - 1).hasClass(human) ||
+                    rowUnder.eq(x - 1).hasClass(ai))
                 ) {
                   moveScore = 9;
                   console.log("in x - 1", moveScore, x, y);
@@ -424,26 +425,89 @@
                 }
               }
             }
-            function applyRowLogic(player) {
+            function applyRowLogic(player, opponent) {
               if (rows.eq(x).hasClass(player)) {
                 counter++;
                 if (x >= 4 && rows.eq(x - 4).hasClass(player)) {
                   counter--;
                 }
-                console.log("row counter", counter, "x", x, "y", y);
-                if (counter === 3) {
-                  if (y === 5) {
-                    bottomRowLogic("player1", "player2");
-                  } else {
-                    rowLogic();
-                  }
-                  // bottomRowLogic("player2", "player1");
-                  // bottomRowLogic("player2", "player1");
+              }
+              if (rows.eq(x).hasClass(opponent)) {
+                counter = 0;
+              }
+
+              if (counter === 3) {
+                if (y === 5) {
+                  bottomRowLogic("player1", "player2");
+                } else {
+                  rowLogic("player1", "player2");
                 }
               }
             }
-            applyRowLogic("player1");
-            // applyRowLogic("player2");
+            applyRowLogic("player1", "player2");
+
+            if (rows.eq(x).hasClass("player1")) {
+              counting++;
+              console.log("count", counting, "x", x);
+            } else {
+              counting = 0;
+            }
+
+            if (counting == 2 && y === 5) {
+              if (
+                !rows.eq(x + 1).hasClass("player1") &&
+                !rows.eq(x + 1).hasClass("player2") &&
+                x <= 5
+              ) {
+                moveScore = 4;
+                if (moveScore > bestMoveSoFar) {
+                  bestMoveSoFar = moveScore;
+                  nextMove = x + 1;
+                }
+              }
+              if (
+                !rows.eq(x - 2).hasClass("player1") &&
+                !rows.eq(x - 2).hasClass("player2") &&
+                x >= 1
+              ) {
+                moveScore = 4;
+                if (moveScore > bestMoveSoFar) {
+                  bestMoveSoFar = moveScore;
+                  nextMove = x - 2;
+                }
+              }
+            } else if (counting == 2 && y < 5) {
+              let under = y + 1;
+              let rowUnder = $(".row" + under);
+              if (
+                !rows.eq(x + 1).hasClass("player1") &&
+                !rows.eq(x + 1).hasClass("player2") &&
+                (rowUnder.eq(x + 1).hasClass("player1") ||
+                  rowUnder.eq(x + 1).hasClass("player2")) &&
+                x <= 5
+              ) {
+                moveScore = 4;
+                if (moveScore > bestMoveSoFar) {
+                  bestMoveSoFar = moveScore;
+                  nextMove = x + 1;
+                }
+              }
+              if (
+                !rows.eq(x - 2).hasClass("player1") &&
+                !rows.eq(x - 2).hasClass("player2") &&
+                (rowUnder.eq(x - 2).hasClass("player1") ||
+                  rowUnder.eq(x - 2).hasClass("player2")) &&
+                x <= 2
+              ) {
+                moveScore = 4;
+                if (moveScore > bestMoveSoFar) {
+                  bestMoveSoFar = moveScore;
+                  nextMove = x - 2;
+                }
+              }
+            }
+
+            // applyRowLogic("player2", "player1");
           }
         }
 
