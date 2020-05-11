@@ -24,64 +24,64 @@
     box.css("visibility", "hidden");
   });
 
-  function checkForDiagVictory() {
-    var diagonal = [];
-    var diagonal2 = [];
-    var diagonal3 = [];
-    var diagonal4 = [];
-    var diagonal5 = [];
-    var diagonal6 = [];
-    var diagonal7 = [];
-    var diagonal8 = [];
-    var diagonal9 = [];
-    var diagonal10 = [];
-    var diagonal11 = [];
-    var diagonal12 = [];
+  var diagonal = [];
+  var diagonal2 = [];
+  var diagonal3 = [];
+  var diagonal4 = [];
+  var diagonal5 = [];
+  var diagonal6 = [];
+  var diagonal7 = [];
+  var diagonal8 = [];
+  var diagonal9 = [];
+  var diagonal10 = [];
+  var diagonal11 = [];
+  var diagonal12 = [];
 
-    for (var x = 0; x < 7; x++) {
-      for (var y = 0; y < 6; y++) {
-        if (x + y == 5) {
-          diagonal.push(getSlotByCoord(x, y));
-        } else if (x + y == 6) {
-          diagonal2.push(getSlotByCoord(x, y));
-        } else if (x + y == 7) {
-          diagonal3.push(getSlotByCoord(x, y));
-        } else if (x + y == 8) {
-          diagonal4.push(getSlotByCoord(x, y));
-        } else if (x + y == 4) {
-          diagonal5.push(getSlotByCoord(x, y));
-        } else if (x + y == 3) {
-          diagonal6.push(getSlotByCoord(x, y));
-        }
-        if (x - y == 3) {
-          diagonal7.push(getSlotByCoord(x, y));
-        } else if (x - y == 2) {
-          diagonal8.push(getSlotByCoord(x, y));
-        } else if (x - y == 1) {
-          diagonal9.push(getSlotByCoord(x, y));
-        } else if (x - y == 0) {
-          diagonal10.push(getSlotByCoord(x, y));
-        } else if (x - y == -1) {
-          diagonal11.push(getSlotByCoord(x, y));
-        } else if (x - y == -2) {
-          diagonal12.push(getSlotByCoord(x, y));
-        }
+  for (var x = 0; x < 7; x++) {
+    for (var y = 0; y < 6; y++) {
+      if (x + y == 5) {
+        diagonal.push(getSlotByCoord(x, y));
+      } else if (x + y == 6) {
+        diagonal2.push(getSlotByCoord(x, y));
+      } else if (x + y == 7) {
+        diagonal3.push(getSlotByCoord(x, y));
+      } else if (x + y == 8) {
+        diagonal4.push(getSlotByCoord(x, y));
+      } else if (x + y == 4) {
+        diagonal5.push(getSlotByCoord(x, y));
+      } else if (x + y == 3) {
+        diagonal6.push(getSlotByCoord(x, y));
+      }
+      if (x - y == 3) {
+        diagonal7.push(getSlotByCoord(x, y));
+      } else if (x - y == 2) {
+        diagonal8.push(getSlotByCoord(x, y));
+      } else if (x - y == 1) {
+        diagonal9.push(getSlotByCoord(x, y));
+      } else if (x - y == 0) {
+        diagonal10.push(getSlotByCoord(x, y));
+      } else if (x - y == -1) {
+        diagonal11.push(getSlotByCoord(x, y));
+      } else if (x - y == -2) {
+        diagonal12.push(getSlotByCoord(x, y));
       }
     }
-    var bigArray = [
-      diagonal,
-      diagonal2,
-      diagonal3,
-      diagonal4,
-      diagonal5,
-      diagonal6,
-      diagonal7,
-      diagonal8,
-      diagonal9,
-      diagonal10,
-      diagonal11,
-      diagonal12,
-    ];
+  }
+  var bigArray = [
+    diagonal,
+    diagonal2,
+    diagonal3,
+    diagonal4,
+    diagonal5,
+    diagonal6,
+    diagonal7,
+    diagonal8,
+    diagonal9,
+    diagonal10,
+    diagonal11,
+    diagonal12,
+  ];
+  function checkForDiagVictory() {
     for (var z = 0; z < bigArray.length; z++) {
       var counter = 0;
       for (var q = 0; q < bigArray[z].length; q++) {
@@ -207,6 +207,7 @@
       playingCoin.css("background-color", "yellow");
       if (mode === "AI") {
         var count = 0;
+        var diagCounter = 0;
         var slots;
         var column;
         var nextMove;
@@ -468,7 +469,7 @@
               if (
                 !rows.eq(x - 2).hasClass("player1") &&
                 !rows.eq(x - 2).hasClass("player2") &&
-                x >= 1
+                x >= 2
               ) {
                 moveScore = 4;
                 if (moveScore > bestMoveSoFar) {
@@ -507,7 +508,20 @@
               }
             }
 
-            // applyRowLogic("player2", "player1");
+            // diagDefanceLogic
+          }
+          for (var z = 0; z < bigArray.length; z++) {
+            var diagCounter = 0;
+            for (var q = 0; q < bigArray[z].length; q++) {
+              if (bigArray[z][q].hasClass("player1")) {
+                diagCounter++;
+              } else {
+                counter = 0;
+              }
+              if (diagCounter == 3) {
+                console.log("diag");
+              }
+            }
           }
         }
 
