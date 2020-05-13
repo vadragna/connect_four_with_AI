@@ -507,19 +507,58 @@
                 }
               }
             }
-
             // diagDefanceLogic
           }
-          for (var z = 0; z < bigArray.length; z++) {
-            var diagCounter = 0;
-            for (var q = 0; q < bigArray[z].length; q++) {
-              if (bigArray[z][q].hasClass("player1")) {
-                diagCounter++;
-              } else {
-                counter = 0;
-              }
-              if (diagCounter == 3) {
-                console.log("diag");
+          diagDefanceLogic();
+          function diagDefanceLogic() {
+            for (var z = 0; z < bigArray.length; z++) {
+              for (var q = 0; q < bigArray[z].length; q++) {
+                if (bigArray[z][q].hasClass("player1")) {
+                  diagCounter++;
+                } else {
+                  diagCounter = 0;
+                }
+                if (diagCounter == 3) {
+                  console.log("bigArray[z][q]", bigArray[z][q]);
+                  if (bigArray[z][q + 1] && z) {
+                    let column = getClass(bigArray[z][q + 1])[0];
+                    let row = getClass(bigArray[z][q + 1])[1];
+                    if (
+                      !getSlotByCoord(column, row).hasClass("player1") &&
+                      !getSlotByCoord(column, row).hasClass("player2") &&
+                      (getSlotByCoord(column, row + 1).hasClass("player1") ||
+                        getSlotByCoord(column, row + 1).hasClass("player2"))
+                    ) {
+                      moveScore = 13;
+                      console.log("in diag +1");
+                    } else {
+                      moveScore = 0;
+                    }
+                    if (moveScore > bestMoveSoFar) {
+                      bestMoveSoFar = moveScore;
+                      nextMove = column;
+                    }
+                  }
+                  if (bigArray[z][q - 3] && z) {
+                    let column = getClass(bigArray[z][q - 3])[0];
+                    let row = getClass(bigArray[z][q - 3])[1];
+                    if (
+                      !getSlotByCoord(column, row).hasClass("player1") &&
+                      !getSlotByCoord(column, row).hasClass("player2") &&
+                      (getSlotByCoord(column, row + 1).hasClass("player1") ||
+                        getSlotByCoord(column, row + 1).hasClass("player2"))
+                    ) {
+                      moveScore = 13;
+                      console.log("in diag -");
+                    } else {
+                      moveScore = 0;
+                    }
+                    if (moveScore > bestMoveSoFar) {
+                      bestMoveSoFar = moveScore;
+                      nextMove = column;
+                    }
+                  }
+                }
               }
             }
           }
@@ -591,5 +630,21 @@
 
   function getSlotByCoord(col, row) {
     return $(".column").eq(col).children().eq(row);
+  }
+
+  function getClass(el) {
+    let parent = el.parent();
+    console.log("el", el, "parent", parent);
+    for (let i = 0; i <= 6; i++) {
+      if (parent.hasClass(numbers[i])) {
+        var column = i;
+      }
+    }
+    for (let i = 0; i <= 5; i++) {
+      if (el.hasClass("row" + i)) {
+        let row = i;
+        return [column, row];
+      }
+    }
   }
 })();
