@@ -517,6 +517,7 @@
             // diagDefanceLogic
           }
           diagDefanceLogic("player1");
+          diagDefanceLogic("player2");
           function diagDefanceLogic(player) {
             for (var z = 0; z < bigArray.length; z++) {
               for (var q = 0; q < bigArray[z].length; q++) {
