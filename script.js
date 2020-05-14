@@ -245,7 +245,11 @@
               count = 0;
             }
             if (count === 2) {
-              if (y > 0 && !slots.eq(y + 1).hasClass("player2" || "player2")) {
+              if (
+                y > 0 &&
+                !slots.eq(y - 1).hasClass("player2") &&
+                !slots.eq(y - 1).hasClass("player1")
+              ) {
                 moveScore = 2;
                 if (moveScore > bestMoveSoFar) {
                   bestMoveSoFar = moveScore;
@@ -257,7 +261,11 @@
               }
             }
             if (count === 3) {
-              if (y > 0 && !slots.eq(y + 1).hasClass("player2" || "player2")) {
+              if (
+                y > 0 &&
+                !slots.eq(y - 1).hasClass("player2") &&
+                !slots.eq(y - 1).hasClass("player1")
+              ) {
                 moveScore = 10;
                 if (moveScore > bestMoveSoFar) {
                   bestMoveSoFar = moveScore;
@@ -308,7 +316,6 @@
                 }
               }
             }
-            // rivedere questa logica, deve impedire quando c'è un buco, prevale il +1 al -1
 
             function bottomRowLogic(human, ai) {
               if (
@@ -509,51 +516,52 @@
             }
             // diagDefanceLogic
           }
-          diagDefanceLogic();
-          function diagDefanceLogic() {
+          diagDefanceLogic("player1");
+          function diagDefanceLogic(player) {
             for (var z = 0; z < bigArray.length; z++) {
               for (var q = 0; q < bigArray[z].length; q++) {
-                if (bigArray[z][q].hasClass("player1")) {
+                if (bigArray[z][q].hasClass(player)) {
                   diagCounter++;
                 } else {
                   diagCounter = 0;
                 }
                 if (diagCounter == 3) {
-                  console.log("bigArray[z][q]", bigArray[z][q]);
-                  if (bigArray[z][q + 1] && z) {
+                  if (bigArray[z][q + 1]) {
                     let column = getClass(bigArray[z][q + 1])[0];
                     let row = getClass(bigArray[z][q + 1])[1];
+                    console.log(bigArray[z][q + 1]);
                     if (
                       !getSlotByCoord(column, row).hasClass("player1") &&
                       !getSlotByCoord(column, row).hasClass("player2") &&
                       (getSlotByCoord(column, row + 1).hasClass("player1") ||
                         getSlotByCoord(column, row + 1).hasClass("player2"))
                     ) {
-                      moveScore = 13;
+                      moveScore = 10;
                       console.log("in diag +1");
                     } else {
                       moveScore = 0;
                     }
-                    if (moveScore > bestMoveSoFar) {
+                    if (moveScore >= bestMoveSoFar) {
                       bestMoveSoFar = moveScore;
                       nextMove = column;
                     }
                   }
-                  if (bigArray[z][q - 3] && z) {
+                  if (bigArray[z][q - 3]) {
                     let column = getClass(bigArray[z][q - 3])[0];
                     let row = getClass(bigArray[z][q - 3])[1];
+                    console.log(bigArray[z][q + 1]);
                     if (
                       !getSlotByCoord(column, row).hasClass("player1") &&
                       !getSlotByCoord(column, row).hasClass("player2") &&
                       (getSlotByCoord(column, row + 1).hasClass("player1") ||
                         getSlotByCoord(column, row + 1).hasClass("player2"))
                     ) {
-                      moveScore = 13;
+                      moveScore = 10;
                       console.log("in diag -");
                     } else {
                       moveScore = 0;
                     }
-                    if (moveScore > bestMoveSoFar) {
+                    if (moveScore >= bestMoveSoFar) {
                       bestMoveSoFar = moveScore;
                       nextMove = column;
                     }
@@ -634,7 +642,6 @@
 
   function getClass(el) {
     let parent = el.parent();
-    console.log("el", el, "parent", parent);
     for (let i = 0; i <= 6; i++) {
       if (parent.hasClass(numbers[i])) {
         var column = i;
