@@ -247,10 +247,9 @@
                 !slots.eq(y - 1).hasClass("player2") &&
                 !slots.eq(y - 1).hasClass("player1")
               ) {
-                moveScore = 2;
+                moveScore = 4;
                 if (moveScore > bestMoveSoFar) {
                   console.log("in attack column 2 pieces", "y", y);
-
                   bestMoveSoFar = moveScore;
                   nextMove = x;
                 }
@@ -265,7 +264,7 @@
                 !slots.eq(y - 1).hasClass("player2") &&
                 !slots.eq(y - 1).hasClass("player1")
               ) {
-                moveScore = 10;
+                moveScore = 13;
                 if (moveScore > bestMoveSoFar) {
                   bestMoveSoFar = moveScore;
                   nextMove = x;
@@ -477,7 +476,7 @@
                 !rows.eq(x - 2).hasClass("player2") &&
                 x >= 2
               ) {
-                moveScore = 4;
+                moveScore = 3;
                 if (moveScore > bestMoveSoFar) {
                   console.log("in defence row -2 2 pieces", "y", y);
                   bestMoveSoFar = moveScore;
@@ -494,7 +493,7 @@
                   rowUnder.eq(x + 1).hasClass("player2")) &&
                 x <= 5
               ) {
-                moveScore = 4;
+                moveScore = 3;
                 if (moveScore > bestMoveSoFar) {
                   console.log("in defence row +1 2 pieces", "y", y);
                   bestMoveSoFar = moveScore;
@@ -510,7 +509,7 @@
               ) {
                 moveScore = 4;
                 if (moveScore > bestMoveSoFar) {
-                  console.log("in defence row -2 2 pieces", "y", y);
+                  console.log("in defence row -2 2 pieces", "y", y, "x", x);
                   bestMoveSoFar = moveScore;
                   nextMove = x - 2;
                 }
@@ -535,7 +534,7 @@
                   if (bigArray[z][q + 1]) {
                     let column = getCoords(bigArray[z][q + 1])[0];
                     let row = getCoords(bigArray[z][q + 1])[1];
-                    // console.log(bigArray[z][q + 1]);
+                    console.log(bigArray[z][q + 1]);
                     if (
                       !getSlotByCoord(column, row).hasClass("player1") &&
                       !getSlotByCoord(column, row).hasClass("player2") &&
@@ -562,7 +561,7 @@
                     ) {
                       moveScore = 10;
                       if (moveScore >= bestMoveSoFar) {
-                        console.log("in diag -");
+                        console.log("in diag - 3");
                         bestMoveSoFar = moveScore;
                         nextMove = column;
                       }
@@ -617,16 +616,16 @@
           function randomMove() {
             var random = Math.floor(Math.random() * 7);
             column = numbers[random];
-            console.log("random", column);
-
             col = $(`.column.${column}`);
+            console.log("random", column, col);
+            var slotsInCol = col.children();
+            if (slotsInCol.eq(0).hasClass("player1" || "player2")) {
+              console.log("lets random again");
+              randomMove();
+            }
             return col.children();
           }
           var slotsInCol = randomMove();
-          if (slotsInCol.eq(0).hasClass("player1" || "player2")) {
-            console.log("lets random again");
-            randomMove();
-          }
         } else {
           column = numbers[nextMove];
           console.log("column", column);
